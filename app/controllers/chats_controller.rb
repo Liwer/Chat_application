@@ -5,6 +5,11 @@ class ChatsController < ApplicationController
   # GET /chats.json
   def index
     @chats = Chat.all
+    userchat = UserChat.where(:user_id == current_user.id)
+    userchat.each do |u|
+      @current_user_chats = Chat.where(:chat_id == u[:user_id])
+    end
+
   end
 
   # GET /chats/1
@@ -15,6 +20,7 @@ class ChatsController < ApplicationController
   # GET /chats/new
   def new
     @chat = Chat.new
+    @users = User.all_except(current_user)
   end
 
   # GET /chats/1/edit
@@ -26,6 +32,12 @@ class ChatsController < ApplicationController
   def create
     @chat = Chat.new(chat_params)
 
+    params[:chat][:user_ids].each do |user_id|
+      @chat.user_chats.build(user_id: user_id).save
+    end  
+      @chat.users << current_user
+
+
     respond_to do |format|
       if @chat.save
         format.html { redirect_to @chat, notice: 'Chat was successfully created.' }
@@ -36,7 +48,6 @@ class ChatsController < ApplicationController
       end
     end
   end
-
   # PATCH/PUT /chats/1
   # PATCH/PUT /chats/1.json
   def update
@@ -69,6 +80,6 @@ class ChatsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def chat_params
-      params[:chat]
+      params.require(:chat).permit(:id, :name, :message => [:text], :user_chat => [:id, :user_id, :chat_id])
     end
 end

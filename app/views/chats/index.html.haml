@@ -1,19 +1,25 @@
+%p#notice= notice
 %h1 Listing chats
-
-%table
-  %thead
-    %tr
-      %th
-      %th
-      %th
-
-  %tbody
-    - @chats.each do |chat|
-      %tr
-        %td= link_to 'Show', chat
-        %td= link_to 'Edit', edit_chat_path(chat)
-        %td= link_to 'Destroy', chat, :method => :delete, :data => { :confirm => 'Are you sure?' }
-
-%br
-
 = link_to 'New Chat', new_chat_path
+- @chats.each do |chat|
+  %br
+  %h3 Chat name:
+  = chat.try(:name) 
+  %br
+  = link_to 'Show', chat
+  = link_to 'Edit', edit_chat_path(chat)
+  = link_to 'Destroy', chat, :method => :delete, :data => { :confirm => 'Are you sure?' }
+%hr
+- if @current_user_chat == nil?
+  You do not participate in any chat 
+- else
+  %h3 Chat rooms where you participate:
+  - @current_user_chats.each do |current_user_chat|
+    %h3 Chat name:
+    = current_user_chat.try(:name)
+    %br
+    = link_to 'show', current_user_chat
+    = link_to 'edit', edit_chat_path(current_user_chat)
+    = link_to 'destroy', current_user_chat, :method => :delete, :data => {:confirm => 'Are you sure?'}
+  %br
+

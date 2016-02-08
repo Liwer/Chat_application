@@ -5,6 +5,10 @@
       %ul
         - @chat.errors.full_messages.each do |msg|
           %li= msg
+  = f.collection_check_boxes(:user_ids, @users, :id, :username)
+  %br 
+  = f.label :name
+  = f.text_field :name
 
   .actions
     = f.submit 'Save'
