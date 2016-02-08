@@ -1,5 +1,13 @@
 Rails.application.routes.draw do
   devise_for :users, :path_prefix => 'my'
+  resources :chats do
+    post "create_message"
+    post "add_users"
+  end
+  resources :messages, only: [:create, :destroy]
+  root "chats#index"
+  get "users" => "users#index"
+  get "user/:id" => "users#show", as: "user_show"
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
