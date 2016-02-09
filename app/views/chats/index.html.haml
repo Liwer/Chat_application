@@ -1,13 +1,22 @@
+%br
+- if @message_count == nil
+  You have no new messages
+- else  
+  You have #{@message_count} new messages
+  - @messages.each do |m|
+    from:
+    = m.user.username
+    message text:
+    = m.text 
 %p#notice= notice
+= link_to "Users list", users_path
 %h1 Listing chats
 = link_to 'New Chat', new_chat_path
 - @chats.each do |chat|
-  %br
   %h3 Chat 
-  = chat.try(:name) 
-  %br
+  = chat.try(:name)  
   = link_to 'Show', chat
-%hr
+%hr 
 - if @current_user_chats == nil or false
   You do not participate in any chat 
 - else
@@ -19,5 +28,4 @@
     = link_to 'show', current_user_chat
     = link_to 'edit', edit_chat_path(current_user_chat)
     = link_to 'destroy', current_user_chat, :method => :delete, :data => {:confirm => 'Are you sure?'}
-  %br
 

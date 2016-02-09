@@ -6,6 +6,10 @@ class ChatsController < ApplicationController
   def index
     @chats = Chat.all
     @current_user_chats = current_user.chats
+    @messages = Message.unread_by(current_user)
+    @messages.each_with_index do |m, i|
+      @message_count = i + 1
+    end
   end
 
   # GET /chats/1
@@ -14,6 +18,7 @@ class ChatsController < ApplicationController
     @chat = Chat.find(params[:id])
     if @chat.users.include?(current_user) == true
       @messages = @chat.messages
+      @messages.mark_as_read! :all, :for => current_user
       @users_in_chat = @chat.users
       @current_chat = @chat.user_chats.where(:user_id => current_user.id)
     else 
@@ -89,9 +94,9 @@ class ChatsController < ApplicationController
       respond_to do |format|
         format.html { redirect_to chats_url, notice: 'Chat was successfully destroyed.' }
         format.json { head :no_content }
-    end 
+      end 
     else 
-        redirect_to :back
+      redirect_to :back
     end
   end
 
