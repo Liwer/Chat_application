@@ -3,14 +3,12 @@
 = link_to 'New Chat', new_chat_path
 - @chats.each do |chat|
   %br
-  %h3 Chat name:
+  %h3 Chat 
   = chat.try(:name) 
   %br
   = link_to 'Show', chat
-  = link_to 'Edit', edit_chat_path(chat)
-  = link_to 'Destroy', chat, :method => :delete, :data => { :confirm => 'Are you sure?' }
 %hr
-- if @current_user_chat == nil?
+- if @current_user_chats == nil or false
   You do not participate in any chat 
 - else
   %h3 Chat rooms where you participate:
