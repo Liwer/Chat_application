@@ -11,12 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160209174058) do
+ActiveRecord::Schema.define(version: 20160210163103) do
 
   create_table "chats", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "message_id"
+    t.integer  "unread_messages", default: 0
   end
 
   create_table "messages", force: :cascade do |t|
@@ -57,6 +59,7 @@ ActiveRecord::Schema.define(version: 20160209174058) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.integer  "messages_count",         default: 0
   end
 
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
