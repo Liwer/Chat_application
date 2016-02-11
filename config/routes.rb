@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users, :path_prefix => 'my'
+  devise_for :users, :path_prefix => 'my', controllers: {registrations: "registrations", sessions: "sessions"}
   resources :chats do
     post "create_message"
     post "add_users"

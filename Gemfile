@@ -25,8 +25,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'haml-rails', '0.9.0'
 gem 'warden', '1.2.6'
 gem 'devise', '3.5.6'
-gem 'cancan', '1.6.10'
 gem 'unread', '0.7.1'
+gem 'cancan', '1.6.10'
 
 
 # Use ActiveModel has_secure_password

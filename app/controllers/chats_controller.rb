@@ -5,9 +5,13 @@ class ChatsController < ApplicationController
   # GET /chats.json
   def index
     @chats = Chat.all
-    @messages = Message.unread_by(current_user)
-    @message_count = @messages.count
-    @current_user_chats = current_user.chats
+    respond_to do |format|
+      format.html{
+        @messages = Message.unread_by(current_user)
+        @message_count = @messages.count
+        @current_user_chats = current_user.chats}
+        format.json {render json: @chats.as_json(only: [:id, :name, :users => [:id, :username ]])}
+    end  
   end
 
   # GET /chats/1
@@ -43,20 +47,19 @@ class ChatsController < ApplicationController
   # POST /chats
   # POST /chats.json
   def create
-    @users = User.all_except(current_user)
     @chat = Chat.new(chat_params)
     user_ids = params[:chat][:user_ids] 
     user_ids.delete("")
+    user_ids << current_user.id if current_user
     users = User.where(id: user_ids)
     @chat.users << users
     if @chat.users == [] 
       redirect_to :back
     else 
-      @chat.users << current_user
       respond_to do |format|
         if @chat.save
-          format.html { redirect_to @chat, notice: 'Chat was successfully created.' }
-          format.json { render :show, status: :created, location: @chat }
+          format.html { redirect_to @chat }
+          format.json { render :json => {chat: {:id => @chat.id, :name => @chat.name, :user_ids => @chat.users.ids }}}
         else
           format.html { render :new }
           format.json { render json: @chat.errors, status: :unprocessable_entity }
@@ -119,6 +122,6 @@ class ChatsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def chat_params
-    params.require(:chat).permit(:id, :name, :users => [:id, :username])
+    params.require(:chat).permit(:id, :name, :users => [:id, :username, :messages_count])
   end
 end
